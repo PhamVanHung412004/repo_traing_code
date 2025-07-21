@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Classifier - Phân loại Email</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        #csv-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+            font-family: Arial, sans-serif;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        #csv-table th, #csv-table td {
+            border: 1px solid #e0e0e0;
+            padding: 8px 12px;
+            text-align: left;
+            transition: background 0.3s;
+        }
+        #csv-table th {
+            background: #1976d2;
+            color: #fff;
+            font-weight: bold;
+        }
+        #csv-table tr:nth-child(even) td {
+            background: #f5f7fa;
+        }
+        #csv-table tr.new-row td {
+            background: #ffe082;
+            animation: fadeRow 1s;
+        }
+        @keyframes fadeRow {
+            from { background: #ffe082; }
+            to { background: #f5f7fa; }
+        }
+        #load-more-btn {
+            margin: 16px 0;
+            padding: 8px 24px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #load-more-btn:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-envelope-open-text"></i>
+                <h1>Email Classifier</h1>
+            </div>
+            <p class="subtitle">Phân loại email thông minh với AI</p>
+        </header>
+
+        <main class="main-content">
+            <div class="input-section">
+                <div class="form-group">
+                    <label for="emailInput" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Nội dung Email
+                    </label>
+                    <textarea 
+                        id="emailInput" 
+                        class="form-input" 
+                        placeholder="Nhập nội dung email cần phân loại..."
+                        rows="8"
+                    ></textarea>
+                </div>
+                
+                <button id="analyzeBtn" class="analyze-btn">
+                    <i class="fas fa-search"></i>
+                    Phân tích Email
+                </button>
+            </div>
+
+            <div id="loadingSection" class="loading-section hidden">
+                <div class="loading-spinner"></div>
+                <p>Đang phân tích email...</p>
+            </div>
+
+            <div id="resultSection" class="result-section hidden">
+                <h3 class="result-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Kết quả phân tích
+                </h3>
+                
+                <div class="result-card">
+                    <div class="prediction-section">
+                        <h4>Dự đoán:</h4>
+                        <div id="predictionResult" class="prediction-result"></div>
+                    </div>
+                    
+                    <div class="confidence-section">
+                        <h4>Độ tin cậy:</h4>
+                        <div class="confidence-bar">
+                            <div id="confidenceBar" class="confidence-fill"></div>
+                            <span id="confidenceText" class="confidence-text"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="probabilities-section">
+                        <h4>Xác suất các loại:</h4>
+                        <div id="probabilitiesList" class="probabilities-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorSection" class="error-section hidden">
+                <div class="error-card">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Lỗi</h4>
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 Email Classifier. Powered by AI.</p>
+        </footer>
+    </div>
+
+    <h2>Hiển thị dữ liệu CSV</h2>
+    <table id="csv-table"></table>
+    <button id="load-more-btn" onclick="loadMoreRows()">Xem thêm</button>
+
+    <script src="script.js"></script>
+</body>
+</html> 
