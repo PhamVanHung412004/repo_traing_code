@@ -3,11 +3,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # C extensions
 *.so
 test/
 hung/
 myenv/
+dataset/
+data_final/
+data_fine_turning/
+gen_dataset/
 # Distribution / packaging
 .Python
 build/
