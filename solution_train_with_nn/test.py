@@ -3,9 +3,10 @@ from torch import nn
 from torchtext.vocab import build_vocab_from_iterator
 from torchtext.data.utils import get_tokenizer
 import pickle
-from clean_data import preprocess_text
 
-device = torch.device("cpu")
+
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class TextClassificationModel(nn.Module):
     def __init__(self, vocab_size, embed_dim, num_class):
@@ -25,7 +26,7 @@ class TextClassificationModel(nn.Module):
         return self.fc(embedded)
 
 # Load vocabulary từ file
-with open('solution_train_with_nn/vocal/vocab.pkl', 'rb') as f:
+with open('vocal/vocab.pkl', 'rb') as f:
     vocabulary = pickle.load(f)
 
 # Đảm bảo có default index để tránh lỗi từ ngoài vocab
@@ -39,7 +40,7 @@ num_class = 4            # Số lớp phân loại, ví dụ: 4 lớp
 
 # ----------- Tải mô hình đã lưu -----------
 model = TextClassificationModel(vocab_size, embed_dim, num_class).to(device)
-model.load_state_dict(torch.load("solution_train_with_nn/model/model_state.pth"))
+model.load_state_dict(torch.load("model/model_state.pth"))
 model.eval()
 
 # ----------- Tiền xử lý văn bản -----------
@@ -53,20 +54,23 @@ def yield_tokens(data_iter):
 
 def predict(text):
     with torch.no_grad():
-        encoded = torch.tensor(vocabulary(tokenizer(text)), device=device)
-        output = model(encoded, torch.tensor([0], device=device))
+        encoded = torch.tensor(vocabulary(tokenizer(text)))
+        output = model(encoded, torch.tensor([0]))
         return output.argmax(1).item()
 
 
 def main() -> None:
     text = """
 Chào bạn,
+
 Đây là email nhắc nhở bạn hoàn thành và nộp bài tiểu luận tuần 4 trước 23h59 ngày 25/07.
+
 Mọi thắc mắc vui lòng liên hệ trực tiếp với giảng viên phụ trách.
+
 Trân trọng,
 Lan Phạm 
 """
-    print(predict(preprocess_text(text)))
+    print(predict(text))
 
 if __name__ == '__main__':
 
